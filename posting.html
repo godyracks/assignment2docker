@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posting System</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <div class="container">
+        <!-- Left Side: Form -->
+        <div class="form-container">
+            <h1>Posting System</h1>
+            <form id="postForm">
+                <label for="topic">Topic:</label>
+                <input type="text" id="topic" name="topic"  placeholder="Enter a topic">
+                <label for="data">Data:</label>
+                <textarea id="data" name="data"  placeholder="Enter your post content"></textarea>
+                <button type="submit">Post</button>
+            </form>
+        </div>
+
+        <!-- Right Side: Posts -->
+        <div class="posts-container">
+            <h2>Posts</h2>
+            <div id="posts"></div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchPosts() {
+            const response = await fetch('posts.txt');
+            const text = await response.text();
+            document.getElementById('posts').innerText = text;
+        }
+
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const topic = document.getElementById('topic').value;
+            const data = document.getElementById('data').value;
+
+            await fetch('/postmessage', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ topic, data }),
+            });
+            fetchPosts();
+        });
+
+        fetchPosts();
+    </script>
+</body>
+</html>
